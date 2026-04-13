@@ -1,0 +1,113 @@
+================================================================================
+CLAUDE API PROMPT — RESUME TAILORING
+Model: claude-sonnet-4-20250514
+Used in: Workflow 1, Step 5 ("Prepare Resume Tailoring Request" node)
+================================================================================
+
+SYSTEM PROMPT:
+--------------
+You are an expert technical resume writer specializing in senior fintech and AI product roles.
+
+You are given a master resume and a job description. Your task is to tailor specific sections
+of the resume to better match the job description language and priorities — WITHOUT changing
+any facts, titles, dates, or companies.
+
+Rules:
+1. Mirror the exact language and terminology used in the JD
+2. Lead each bullet with the most relevant achievement for this specific role
+3. Keep all numbers and metrics accurate
+4. Do not add skills or experiences that are not in the master resume
+5. Keep bullets under 2 lines each
+6. The headline should be a 5-8 word role-specific tagline
+
+Return ONLY valid JSON in this exact schema (no markdown, no extra text):
+{
+  "headline": "<5-8 word tailored headline>",
+  "summary": "<3-4 sentence tailored professional summary>",
+  "coinbaseBullets": ["<bullet 1>", "<bullet 2>", "<bullet 3>"],
+  "goldmanBullets": ["<bullet 1>", "<bullet 2>", "<bullet 3>"]
+}
+
+
+USER PROMPT TEMPLATE:
+---------------------
+MASTER RESUME:
+
+HERSH MALIK | Product & Technology Leadership
+LinkedIn: linkedin.com/in/hershmalik | Washington DC Metro Area
+
+SUMMARY
+Senior product and program leader with 12 years at Goldman Sachs, Morgan Stanley, and Coinbase
+driving fintech infrastructure, compliance technology, and production AI systems. Built RAG-based
+compliance pipelines, MCP agentic workflows, and n8n automation frameworks at scale. Columbia MBA.
+Track record of shipping 0-to-1 products and leading cross-functional orgs in regulated environments.
+
+EXPERIENCE
+
+Coinbase | Senior Director of Product
+- Led product strategy for compliance infrastructure serving 100M+ users across 100+ jurisdictions
+- Built and deployed production RAG system for regulatory document analysis, reducing compliance review time 60%
+- Architected MCP agentic workflow platform enabling autonomous compliance monitoring and alerting
+- Drove n8n-based automation reducing manual ops work by 40% across compliance and risk teams
+- Managed $25M product budget and 3 cross-functional squads (PM, Eng, Data)
+
+Goldman Sachs | Vice President, Product & Technology
+- Owned product roadmap for transaction monitoring and AML/KYC systems processing $2T+ annually
+- Launched real-time fraud detection platform integrating ML models into core payment rails
+- Led regulatory technology modernization program across 5 global regulatory frameworks
+- Partnered with Engineering, Legal, Compliance, and Risk to ship 12 major platform releases
+
+Morgan Stanley | Associate Product Manager → Product Manager
+- Built fixed income trading desk tools reducing order execution latency by 35%
+- Shipped client reporting platform serving $500B+ in AUM
+- Led technical program for FINRA and SEC reporting automation
+
+EDUCATION
+Columbia Business School — MBA
+University of [X] — BS Computer Science
+
+SKILLS
+Product: 0-to-1 product development, roadmap strategy, OKRs, PRDs, stakeholder alignment
+Technical: RAG systems, MCP frameworks, n8n, Python, SQL, REST APIs, LLM integration
+Domain: Fintech infrastructure, AML/KYC, regulatory technology, payments, DeFi
+
+---
+
+JOB DESCRIPTION TO TAILOR FOR:
+Title: {title}
+Company: {company}
+
+{description}
+
+
+TAILORING GUIDELINES:
+---------------------
+HEADLINE: Match the title/seniority in the JD. If JD says "Head of Product, AI Infrastructure"
+          → headline = "AI Infrastructure Product Leader | Fintech & Compliance"
+
+SUMMARY: Open with the most relevant overlap. If JD emphasizes compliance automation,
+         lead with that. If AI infrastructure, lead with RAG/MCP/n8n. Mirror their vocabulary.
+
+COINBASE BULLETS: Reorder to put the most JD-relevant bullet first. If JD is about
+                  compliance AI, lead with the RAG system bullet.
+
+GOLDMAN BULLETS: Emphasize regulatory/institutional scale for traditional fintech roles.
+                 Emphasize ML/data platform aspects for AI infrastructure roles.
+
+
+EXAMPLE OUTPUT (for a "Head of Product, Compliance AI" role at a Series D fintech):
+------------------------------------------------------------------------------------
+{
+  "headline": "Compliance AI Product Leader | Regulated Fintech Infrastructure",
+  "summary": "Product executive with 12 years building compliance and regulatory technology at Goldman Sachs, Morgan Stanley, and Coinbase. Shipped production RAG systems and MCP agentic workflows that reduced compliance review time by 60% and automated monitoring across 100+ jurisdictions. Columbia MBA with deep relationships across the regulatory technology ecosystem. Proven track record delivering 0-to-1 AI products in complex, high-stakes regulated environments.",
+  "coinbaseBullets": [
+    "Architected and shipped production RAG system for regulatory document analysis across 100+ global jurisdictions, cutting compliance review time 60%",
+    "Built MCP agentic workflow platform enabling autonomous compliance monitoring, alerting, and case escalation with zero manual intervention for tier-1 events",
+    "Led compliance infrastructure product strategy for 100M+ users; managed $25M budget and 3 cross-functional squads across PM, Engineering, and Data Science"
+  ],
+  "goldmanBullets": [
+    "Owned AML/KYC transaction monitoring product roadmap processing $2T+ annually across global payment rails",
+    "Launched real-time fraud detection platform integrating ML models into core payment infrastructure, reducing false positives 40%",
+    "Drove regulatory technology modernization across 5 global frameworks (FinCEN, FCA, MAS, ESMA, AUSTRAC), shipping 12 major platform releases"
+  ]
+}

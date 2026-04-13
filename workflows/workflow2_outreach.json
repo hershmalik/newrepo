@@ -1,0 +1,509 @@
+{
+  "name": "Cold Email Outreach - Workflow 2",
+  "nodes": [
+    {
+      "id": "node-schedule-trigger-w2",
+      "name": "Daily 8AM Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [200, 390],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 8 * * *"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "node-manual-trigger-w2",
+      "name": "Manual Test Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [200, 540],
+      "parameters": {}
+    },
+    {
+      "id": "node-read-sheet",
+      "name": "Google Sheets: Read Pending Outreach",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.4,
+      "position": [460, 390],
+      "continueOnFail": true,
+      "parameters": {
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "value": "REPLACE_WITH_YOUR_GOOGLE_SHEET_ID",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Job Tracker",
+          "mode": "name"
+        },
+        "options": {
+          "headerRow": 1,
+          "returnAllRows": true
+        }
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "REPLACE_GOOGLE_SHEETS_CRED_ID",
+          "name": "Google Sheets OAuth2"
+        }
+      }
+    },
+    {
+      "id": "node-filter-outreach-candidates",
+      "name": "Filter: Score >= 8 and No Outreach Yet",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [720, 390],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "score-filter",
+              "leftValue": "={{ $json.Score }}",
+              "rightValue": 8,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            },
+            {
+              "id": "outreach-filter",
+              "leftValue": "={{ $json['Outreach Sent'] }}",
+              "rightValue": "No",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true
+      }
+    },
+    {
+      "id": "node-limit-daily",
+      "name": "Limit to 20 Per Day",
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [980, 390],
+      "parameters": {
+        "maxItems": 20
+      }
+    },
+    {
+      "id": "node-apollo-find-contact",
+      "name": "Apollo: Find Decision Maker",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1240, 390],
+      "continueOnFail": true,
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.apollo.io/v1/mixed_people/search",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Cache-Control",
+              "value": "no-cache"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={\n  \"api_key\": \"{{ $credentials.apolloApi.apiKey }}\",\n  \"q_organization_name\": \"{{ $json.Company }}\",\n  \"person_titles\": {{ parseInt($json.Score) >= 8 ? JSON.stringify(['CEO', 'Chief Executive Officer', 'Head of Product', 'Chief Product Officer', 'VP of Product', 'VP Product']) : JSON.stringify(['Head of Product', 'Chief Product Officer', 'VP of Product']) }},\n  \"page\": 1,\n  \"per_page\": 5,\n  \"contact_email_status\": [\"verified\", \"guessed\", \"unavailable\", \"bounced\", \"pending_manual_fulfillment\"]\n}",
+        "options": {
+          "timeout": 30000,
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_APOLLO_CRED_ID",
+          "name": "Apollo API Key"
+        }
+      }
+    },
+    {
+      "id": "node-extract-contact",
+      "name": "Extract Best Contact",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1500, 390],
+      "parameters": {
+        "jsCode": "// Extract the best contact from Apollo response\n// Logic: prefer CEO for small companies, Head of Product / CPO for larger ones\n\nconst apolloResponse = $json;\nconst jobData = $node['Filter: Score >= 8 and No Outreach Yet'].json;\n\nconst people = apolloResponse?.people || [];\n\nif (people.length === 0) {\n  // No contact found — skip this job\n  return [\n    {\n      json: {\n        ...jobData,\n        _skipOutreach: true,\n        _skipReason: 'No contact found in Apollo',\n        contactName: '',\n        contactTitle: '',\n        contactEmail: '',\n        contactLinkedIn: ''\n      }\n    }\n  ];\n}\n\n// Priority order: CEO > CPO > Head of Product > VP Product > any\nconst titlePriority = ['ceo', 'chief executive', 'chief product', 'cpo', 'head of product', 'vp product', 'vp of product'];\n\nconst ranked = people\n  .filter(p => p.email && p.email !== 'email_not_found@email.com')\n  .sort((a, b) => {\n    const aTitle = (a.title || '').toLowerCase();\n    const bTitle = (b.title || '').toLowerCase();\n    const aRank = titlePriority.findIndex(t => aTitle.includes(t));\n    const bRank = titlePriority.findIndex(t => bTitle.includes(t));\n    return (aRank === -1 ? 99 : aRank) - (bRank === -1 ? 99 : bRank);\n  });\n\nconst best = ranked[0] || people[0];\n\nreturn [\n  {\n    json: {\n      // Carry forward all job fields\n      Date: jobData.Date,\n      Company: jobData.Company,\n      Title: jobData.Title,\n      Score: jobData.Score,\n      'Fit Reasons': jobData['Fit Reasons'],\n      'Application URL': jobData['Application URL'],\n      'Tailored Headline': jobData['Tailored Headline'],\n      'Tailored Summary': jobData['Tailored Summary'],\n      // Contact info\n      contactName: `${best.first_name || ''} ${best.last_name || ''}`.trim(),\n      contactTitle: best.title || '',\n      contactEmail: best.email || '',\n      contactLinkedIn: best.linkedin_url || '',\n      contactOrg: best.organization?.name || jobData.Company,\n      contactOrgSize: best.organization?.num_employees || 'unknown',\n      _skipOutreach: false\n    }\n  }\n];"
+      }
+    },
+    {
+      "id": "node-filter-skip",
+      "name": "Filter: Skip if No Contact",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [1760, 390],
+      "parameters": {
+        "conditions": {
+          "conditions": [
+            {
+              "id": "skip-filter",
+              "leftValue": "={{ $json._skipOutreach }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "notEquals"
+              }
+            },
+            {
+              "id": "email-filter",
+              "leftValue": "={{ $json.contactEmail }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true
+      }
+    },
+    {
+      "id": "node-zerobounce",
+      "name": "ZeroBounce: Validate Email",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [2020, 390],
+      "continueOnFail": true,
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.zerobounce.net/v2/validate",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "api_key",
+              "value": "={{ $credentials.zeroBounceApi.apiKey }}"
+            },
+            {
+              "name": "email",
+              "value": "={{ $json.contactEmail }}"
+            },
+            {
+              "name": "ip_address",
+              "value": ""
+            }
+          ]
+        },
+        "options": {
+          "timeout": 15000,
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "credentials": {
+        "httpQueryAuth": {
+          "id": "REPLACE_ZEROBOUNCE_CRED_ID",
+          "name": "ZeroBounce API Key"
+        }
+      }
+    },
+    {
+      "id": "node-filter-valid-email",
+      "name": "Filter: Valid Emails Only",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [2280, 390],
+      "parameters": {
+        "conditions": {
+          "conditions": [
+            {
+              "id": "valid-email",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "valid",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true
+      }
+    },
+    {
+      "id": "node-prepare-email-request",
+      "name": "Prepare Email Generation Request",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2540, 390],
+      "parameters": {
+        "jsCode": "// Note: After ZeroBounce node, $json is the ZeroBounce response.\n// Retrieve the job/contact data from the previous node.\nconst zbResponse = $json;\nconst contactData = $node['Extract Best Contact'].json;\n\nconst SYSTEM_PROMPT = `You are an expert cold email copywriter specializing in senior executive outreach.\n\nYou write concise, personalized, non-salesy cold emails on behalf of Hersh Malik — a senior fintech and AI product leader.\n\nEmail rules:\n1. Subject line must reference something specific about the company (product, milestone, mission, or market position)\n2. Opening line establishes shared context: Columbia MBA, fintech background, DC area, or mutual connection if obvious\n3. One sentence on what Hersh is exploring (senior PM / TPM / Director of Product roles)\n4. Two sentences matching Hersh's specific background to their company's domain\n5. One soft ask for a 15-minute conversation\n6. Sign off as Hersh Malik with LinkedIn URL: linkedin.com/in/hershmalik\n7. Total email body MUST be under 150 words\n8. DO NOT use generic phrases like 'I came across your company' or 'I am reaching out because'\n\nHersh's background to draw from:\n- 12 years product and program leadership at Goldman Sachs, Morgan Stanley, and Coinbase\n- Deep expertise in fintech infrastructure, compliance tech, and regulatory systems\n- Production RAG systems, MCP agentic workflows, n8n automation\n- Columbia MBA\n- Washington DC metro area\n- Target: $250K+ base, Principal PM / Senior Director Product / Lead PM / TPM\n\nReturn ONLY valid JSON in this exact schema (no markdown, no extra text):\n{\n  \"subject\": \"<specific, personalized subject line>\",\n  \"body\": \"<complete email body under 150 words>\"\n}`;\n\nconst userMessage = `Write a cold outreach email with these details:\n\nTO: ${contactData.contactName} (${contactData.contactTitle})\nCOMPANY: ${contactData.Company}\nJOB HERSH IS TARGETING: ${contactData.Title}\nCOMPANY SIZE: ~${contactData.contactOrgSize} employees\n\nJOB FIT CONTEXT (why Hersh is a strong match):\n${contactData['Fit Reasons'] || 'Senior fintech and AI product leader background'}\n\nTAILORED HEADLINE FOR THIS ROLE:\n${contactData['Tailored Headline'] || ''}`;\n\nconst requestBody = {\n  model: 'claude-sonnet-4-20250514',\n  max_tokens: 600,\n  system: SYSTEM_PROMPT,\n  messages: [\n    { role: 'user', content: userMessage }\n  ]\n};\n\nreturn [\n  {\n    json: {\n      ...contactData,\n      _emailRequestBody: JSON.stringify(requestBody),\n      _emailAddress: zbResponse.address || contactData.contactEmail\n    }\n  }\n];"
+      }
+    },
+    {
+      "id": "node-claude-email",
+      "name": "Claude API: Generate Cold Email",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [2800, 390],
+      "continueOnFail": true,
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ $json._emailRequestBody }}",
+        "options": {
+          "timeout": 60000,
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_ANTHROPIC_CRED_ID",
+          "name": "Anthropic API Key"
+        }
+      }
+    },
+    {
+      "id": "node-parse-email",
+      "name": "Parse Generated Email",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [3060, 390],
+      "parameters": {
+        "jsCode": "const apiResponse = $json;\nconst contactData = $node['Prepare Email Generation Request'].json;\n\nlet subject = '';\nlet body = '';\nlet emailError = null;\n\ntry {\n  if (apiResponse.error) {\n    throw new Error(`Claude API error: ${apiResponse.error.message}`);\n  }\n\n  const content = apiResponse?.content?.[0]?.text;\n  if (!content) throw new Error('No content in Claude response');\n\n  const cleaned = content.replace(/```json\\n?/g, '').replace(/```\\n?/g, '').trim();\n  const parsed = JSON.parse(cleaned);\n\n  subject = parsed.subject || '';\n  body = parsed.body || '';\n\n  // Safety check: reject emails over 200 words\n  const wordCount = body.split(/\\s+/).length;\n  if (wordCount > 200) {\n    body = body.split(/\\s+/).slice(0, 175).join(' ') + '...';\n  }\n\n} catch (err) {\n  emailError = err.message;\n}\n\nreturn [\n  {\n    json: {\n      ...contactData,\n      emailSubject: subject,\n      emailBody: body,\n      emailError,\n      toEmail: contactData._emailAddress\n    }\n  }\n];"
+      }
+    },
+    {
+      "id": "node-filter-email-errors",
+      "name": "Filter: Skip Email Errors",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [3320, 390],
+      "parameters": {
+        "conditions": {
+          "conditions": [
+            {
+              "id": "no-error",
+              "leftValue": "={{ $json.emailError }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "has-subject",
+              "leftValue": "={{ $json.emailSubject }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true
+      }
+    },
+    {
+      "id": "node-send-gmail",
+      "name": "Gmail: Send Cold Email",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [3580, 390],
+      "continueOnFail": true,
+      "parameters": {
+        "operation": "send",
+        "sendTo": "={{ $json.toEmail }}",
+        "subject": "={{ $json.emailSubject }}",
+        "emailType": "text",
+        "message": "={{ $json.emailBody }}",
+        "options": {
+          "senderName": "Hersh Malik",
+          "appendAttribution": false
+        }
+      },
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "REPLACE_GMAIL_CRED_ID",
+          "name": "Gmail OAuth2"
+        }
+      }
+    },
+    {
+      "id": "node-update-sheet",
+      "name": "Google Sheets: Mark Outreach Sent",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.4,
+      "position": [3840, 390],
+      "continueOnFail": true,
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "REPLACE_WITH_YOUR_GOOGLE_SHEET_ID",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Job Tracker",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Company": "={{ $json.Company }}",
+            "Outreach Sent": "Yes",
+            "Outreach Date": "={{ new Date().toISOString().split('T')[0] }}",
+            "Contact Name": "={{ $json.contactName }}",
+            "Contact Email": "={{ $json.toEmail }}"
+          }
+        },
+        "options": {
+          "valueInputMode": "USER_ENTERED"
+        }
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "REPLACE_GOOGLE_SHEETS_CRED_ID",
+          "name": "Google Sheets OAuth2"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Daily 8AM Trigger": {
+      "main": [
+        [{ "node": "Google Sheets: Read Pending Outreach", "type": "main", "index": 0 }]
+      ]
+    },
+    "Manual Test Trigger": {
+      "main": [
+        [{ "node": "Google Sheets: Read Pending Outreach", "type": "main", "index": 0 }]
+      ]
+    },
+    "Google Sheets: Read Pending Outreach": {
+      "main": [
+        [{ "node": "Filter: Score >= 8 and No Outreach Yet", "type": "main", "index": 0 }]
+      ]
+    },
+    "Filter: Score >= 8 and No Outreach Yet": {
+      "main": [
+        [{ "node": "Limit to 20 Per Day", "type": "main", "index": 0 }]
+      ]
+    },
+    "Limit to 20 Per Day": {
+      "main": [
+        [{ "node": "Apollo: Find Decision Maker", "type": "main", "index": 0 }]
+      ]
+    },
+    "Apollo: Find Decision Maker": {
+      "main": [
+        [{ "node": "Extract Best Contact", "type": "main", "index": 0 }]
+      ]
+    },
+    "Extract Best Contact": {
+      "main": [
+        [{ "node": "Filter: Skip if No Contact", "type": "main", "index": 0 }]
+      ]
+    },
+    "Filter: Skip if No Contact": {
+      "main": [
+        [{ "node": "ZeroBounce: Validate Email", "type": "main", "index": 0 }]
+      ]
+    },
+    "ZeroBounce: Validate Email": {
+      "main": [
+        [{ "node": "Filter: Valid Emails Only", "type": "main", "index": 0 }]
+      ]
+    },
+    "Filter: Valid Emails Only": {
+      "main": [
+        [{ "node": "Prepare Email Generation Request", "type": "main", "index": 0 }]
+      ]
+    },
+    "Prepare Email Generation Request": {
+      "main": [
+        [{ "node": "Claude API: Generate Cold Email", "type": "main", "index": 0 }]
+      ]
+    },
+    "Claude API: Generate Cold Email": {
+      "main": [
+        [{ "node": "Parse Generated Email", "type": "main", "index": 0 }]
+      ]
+    },
+    "Parse Generated Email": {
+      "main": [
+        [{ "node": "Filter: Skip Email Errors", "type": "main", "index": 0 }]
+      ]
+    },
+    "Filter: Skip Email Errors": {
+      "main": [
+        [{ "node": "Gmail: Send Cold Email", "type": "main", "index": 0 }]
+      ]
+    },
+    "Gmail: Send Cold Email": {
+      "main": [
+        [{ "node": "Google Sheets: Mark Outreach Sent", "type": "main", "index": 0 }]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true
+  },
+  "tags": ["job-search", "workflow-2", "outreach"],
+  "notes": "Workflow 2: Reads Google Sheets for score >= 8 jobs without outreach, finds decision maker email via Apollo, validates via ZeroBounce, generates personalized cold email with Claude, sends via Gmail, marks sheet as sent.\n\nRate limited to 20 emails per day.\n\nREQUIRED CREDENTIALS:\n- 'Anthropic API Key': httpHeaderAuth, field=x-api-key\n- 'Google Sheets OAuth2': OAuth2\n- 'Gmail OAuth2': OAuth2\n- 'Apollo API Key': httpQueryAuth or httpHeaderAuth\n- 'ZeroBounce API Key': httpQueryAuth, field=api_key\n\nNOTE on Apollo API: Apollo's v1 API uses api_key in the request body for some endpoints. Adjust authentication method based on your Apollo plan tier."
+}

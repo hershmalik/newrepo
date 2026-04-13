@@ -1,0 +1,246 @@
+{
+  "name": "Job Discovery - Steps 5-7 (Resume Tailoring, Sheets, Slack)",
+  "nodes": [
+    {
+      "id": "node-manual-trigger-w1b",
+      "name": "Manual Test Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [200, 390],
+      "parameters": {}
+    },
+    {
+      "id": "node-prepare-resume-request",
+      "name": "Prepare Resume Tailoring Request",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 390],
+      "parameters": {
+        "jsCode": "// Build Claude request to tailor resume for this specific job\n\nconst MASTER_RESUME = `\nHERSH MALIK | Product & Technology Leadership\nLinkedIn: linkedin.com/in/hershmalik | Washington DC Metro Area\n\nSUMMARY\nSenior product and program leader with 12 years at Goldman Sachs, Morgan Stanley, and Coinbase driving fintech infrastructure, compliance technology, and production AI systems. Built RAG-based compliance pipelines, MCP agentic workflows, and n8n automation frameworks at scale. Columbia MBA. Track record of shipping 0-to-1 products and leading cross-functional orgs in regulated environments.\n\nEXPERIENCE\n\nCoinbase | Senior Director of Product (most recent role)\n- Led product strategy for compliance infrastructure serving 100M+ users across 100+ jurisdictions\n- Built and deployed production RAG system for regulatory document analysis, reducing compliance review time 60%\n- Architected MCP agentic workflow platform enabling autonomous compliance monitoring and alerting\n- Drove n8n-based automation reducing manual ops work by 40% across compliance and risk teams\n- Managed $25M product budget and 3 cross-functional squads (PM, Eng, Data)\n\nGoldman Sachs | Vice President, Product & Technology\n- Owned product roadmap for transaction monitoring and AML/KYC systems processing $2T+ annually\n- Launched real-time fraud detection platform integrating ML models into core payment rails\n- Led regulatory technology modernization program across 5 global regulatory frameworks\n- Partnered with Engineering, Legal, Compliance, and Risk to ship 12 major platform releases\n\nMorgan Stanley | Associate Product Manager → Product Manager\n- Built fixed income trading desk tools reducing order execution latency by 35%\n- Shipped client reporting platform serving $500B+ in AUM\n- Led technical program for FINRA and SEC reporting automation\n\nEDUCATION\nColumbia Business School — MBA\nUniversity of [X] — BS Computer Science\n\nSKILLS\nProduct: 0-to-1 product development, roadmap strategy, OKRs, PRDs, stakeholder alignment\nTechnical: RAG systems, MCP frameworks, n8n, Python, SQL, REST APIs, LLM integration\nDomain: Fintech infrastructure, AML/KYC, regulatory technology, payments, DeFi\n`;\n\nconst SYSTEM_PROMPT = `You are an expert technical resume writer specializing in senior fintech and AI product roles.\n\nYou are given a master resume and a job description. Your task is to tailor specific sections of the resume to better match the job description language and priorities — WITHOUT changing any facts, titles, dates, or companies.\n\nRules:\n1. Mirror the exact language and terminology used in the JD\n2. Lead each bullet with the most relevant achievement for this specific role\n3. Keep all numbers and metrics accurate\n4. Do not add skills or experiences that are not in the master resume\n5. Keep bullets under 2 lines each\n6. The headline should be a 5-8 word role-specific tagline\n\nReturn ONLY valid JSON in this exact schema (no markdown, no extra text):\n{\n  \"headline\": \"<5-8 word tailored headline>\",\n  \"summary\": \"<3-4 sentence tailored professional summary>\",\n  \"coinbaseBullets\": [\"<bullet 1>\", \"<bullet 2>\", \"<bullet 3>\"],\n  \"goldmanBullets\": [\"<bullet 1>\", \"<bullet 2>\", \"<bullet 3>\"]\n}`;\n\nconst job = $json;\n\nconst userMessage = `MASTER RESUME:\n${MASTER_RESUME}\n\n---\n\nJOB DESCRIPTION TO TAILOR FOR:\nTitle: ${job.title}\nCompany: ${job.company}\n\n${job.description}`;\n\nconst requestBody = {\n  model: 'claude-sonnet-4-20250514',\n  max_tokens: 1500,\n  system: SYSTEM_PROMPT,\n  messages: [\n    {\n      role: 'user',\n      content: userMessage\n    }\n  ]\n};\n\nreturn [\n  {\n    json: {\n      ...job,\n      _resumeRequestBody: JSON.stringify(requestBody)\n    }\n  }\n];"
+      }
+    },
+    {
+      "id": "node-claude-resume",
+      "name": "Claude API: Tailor Resume",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [720, 390],
+      "continueOnFail": true,
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ $json._resumeRequestBody }}",
+        "options": {
+          "timeout": 60000,
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_ANTHROPIC_CRED_ID",
+          "name": "Anthropic API Key"
+        }
+      }
+    },
+    {
+      "id": "node-parse-resume",
+      "name": "Parse Resume Tailoring Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [980, 390],
+      "parameters": {
+        "jsCode": "const apiResponse = $json;\nconst prevJob = $node['Prepare Resume Tailoring Request'].json;\n\nlet headline = '';\nlet summary = '';\nlet coinbaseBullets = [];\nlet goldmanBullets = [];\nlet resumeError = null;\n\ntry {\n  if (apiResponse.error) {\n    throw new Error(`Claude API error: ${apiResponse.error.message}`);\n  }\n\n  const content = apiResponse?.content?.[0]?.text;\n  if (!content) throw new Error('No content in Claude response');\n\n  const cleaned = content.replace(/```json\\n?/g, '').replace(/```\\n?/g, '').trim();\n  const parsed = JSON.parse(cleaned);\n\n  headline = parsed.headline || '';\n  summary = parsed.summary || '';\n  coinbaseBullets = Array.isArray(parsed.coinbaseBullets) ? parsed.coinbaseBullets : [];\n  goldmanBullets = Array.isArray(parsed.goldmanBullets) ? parsed.goldmanBullets : [];\n\n} catch (err) {\n  resumeError = err.message;\n}\n\nreturn [\n  {\n    json: {\n      date: new Date().toISOString().split('T')[0],\n      company: prevJob.company,\n      title: prevJob.title,\n      score: prevJob.score,\n      fitReasons: prevJob.fitReasons,\n      gaps: prevJob.gaps,\n      summary: prevJob.summary,\n      applicationUrl: prevJob.applicationUrl,\n      salary: prevJob.salary,\n      source: prevJob.source,\n      tailoredHeadline: headline,\n      tailoredSummary: summary,\n      coinbaseBullets: coinbaseBullets.join(' | '),\n      goldmanBullets: goldmanBullets.join(' | '),\n      resumeStatus: resumeError ? `Error: ${resumeError}` : 'Tailored',\n      resumeError\n    }\n  }\n];"
+      }
+    },
+    {
+      "id": "node-google-sheets",
+      "name": "Google Sheets: Append Row",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.4,
+      "position": [1240, 390],
+      "continueOnFail": true,
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "REPLACE_WITH_YOUR_GOOGLE_SHEET_ID",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Job Tracker",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Date": "={{ $json.date }}",
+            "Company": "={{ $json.company }}",
+            "Title": "={{ $json.title }}",
+            "Score": "={{ $json.score }}",
+            "Fit Reasons": "={{ $json.fitReasons ? $json.fitReasons.join('; ') : '' }}",
+            "Gaps": "={{ $json.gaps ? $json.gaps.join('; ') : '' }}",
+            "Fit Summary": "={{ $json.summary }}",
+            "Salary": "={{ $json.salary }}",
+            "Application URL": "={{ $json.applicationUrl }}",
+            "Source": "={{ $json.source }}",
+            "Tailored Headline": "={{ $json.tailoredHeadline }}",
+            "Tailored Summary": "={{ $json.tailoredSummary }}",
+            "Coinbase Bullets": "={{ $json.coinbaseBullets }}",
+            "Goldman Bullets": "={{ $json.goldmanBullets }}",
+            "Resume Status": "={{ $json.resumeStatus }}",
+            "Outreach Sent": "No",
+            "Outreach Date": "",
+            "Contact Name": "",
+            "Contact Email": ""
+          }
+        },
+        "options": {
+          "valueInputMode": "USER_ENTERED"
+        }
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "REPLACE_GOOGLE_SHEETS_CRED_ID",
+          "name": "Google Sheets OAuth2"
+        }
+      }
+    },
+    {
+      "id": "node-aggregate-for-slack",
+      "name": "Aggregate Top 5 for Slack",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1500, 390],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Collect all high-score jobs and format the top 5 for Slack\n\nconst jobs = $input.all().map(item => item.json);\n\n// Sort by score descending\nconst sorted = jobs.sort((a, b) => (b.score || 0) - (a.score || 0));\n\nconst top5 = sorted.slice(0, 5);\n\nif (top5.length === 0) {\n  return [\n    {\n      json: {\n        slackMessage: '*Job Discovery Report — No high-score jobs found today.*\\nCheck Apify actor logs and verify scraping is working.'\n      }\n    }\n  ];\n}\n\nconst today = new Date().toISOString().split('T')[0];\n\nlet blocks = [\n  {\n    type: 'header',\n    text: {\n      type: 'plain_text',\n      text: `Job Discovery Report — ${today}`\n    }\n  },\n  {\n    type: 'section',\n    text: {\n      type: 'mrkdwn',\n      text: `*${sorted.length} high-scoring jobs found today. Top ${top5.length} below:*`\n    }\n  },\n  { type: 'divider' }\n];\n\ntop5.forEach((job, i) => {\n  const scoreEmoji = job.score >= 9 ? '🔥' : job.score >= 8 ? '⭐' : '✅';\n  const fitText = Array.isArray(job.fitReasons) ? job.fitReasons.slice(0, 2).join(' • ') : job.summary || '';\n  \n  blocks.push({\n    type: 'section',\n    text: {\n      type: 'mrkdwn',\n      text: `${scoreEmoji} *${job.company}* | ${job.title}\\n*Score:* ${job.score}/10${job.salary ? ` | *Salary:* ${job.salary}` : ''}\\n*Why it fits:* ${fitText}${job.tailoredHeadline ? `\\n*Tailored headline:* _${job.tailoredHeadline}_` : ''}`\n    },\n    accessory: job.applicationUrl ? {\n      type: 'button',\n      text: { type: 'plain_text', text: 'Apply' },\n      url: job.applicationUrl\n    } : undefined\n  });\n  blocks.push({ type: 'divider' });\n});\n\nblocks.push({\n  type: 'context',\n  elements: [\n    {\n      type: 'mrkdwn',\n      text: `All ${sorted.length} results logged to Google Sheets. Workflow 2 (outreach) runs at 8AM for score ≥ 8 jobs.`\n    }\n  ]\n});\n\nreturn [\n  {\n    json: {\n      slackBlocks: JSON.stringify(blocks),\n      slackText: top5.map(j => `${j.company} | ${j.title} | ${j.score}/10 | ${j.summary}`).join('\\n'),\n      totalFound: sorted.length\n    }\n  }\n];"
+      }
+    },
+    {
+      "id": "node-slack",
+      "name": "Slack: Send Top 5 Jobs",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [1760, 390],
+      "continueOnFail": true,
+      "parameters": {
+        "operation": "post",
+        "channel": {
+          "__rl": true,
+          "value": "REPLACE_WITH_YOUR_SLACK_CHANNEL_ID",
+          "mode": "id"
+        },
+        "text": "={{ $json.slackText }}",
+        "blocksUi": "={{ $json.slackBlocks }}",
+        "otherOptions": {
+          "unfurl_links": false,
+          "unfurl_media": false
+        }
+      },
+      "credentials": {
+        "slackApi": {
+          "id": "REPLACE_SLACK_CRED_ID",
+          "name": "Slack API"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Manual Test Trigger": {
+      "main": [
+        [
+          {
+            "node": "Prepare Resume Tailoring Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Resume Tailoring Request": {
+      "main": [
+        [
+          {
+            "node": "Claude API: Tailor Resume",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claude API: Tailor Resume": {
+      "main": [
+        [
+          {
+            "node": "Parse Resume Tailoring Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Resume Tailoring Response": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets: Append Row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets: Append Row": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Top 5 for Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate Top 5 for Slack": {
+      "main": [
+        [
+          {
+            "node": "Slack: Send Top 5 Jobs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true
+  },
+  "tags": ["job-search", "workflow-1", "steps-5-7"],
+  "notes": "Workflow 1 Steps 5-7: Receives high-score jobs from Steps 1-4, tailors the resume for each, writes to Google Sheets, and sends the top 5 to Slack.\n\nThis workflow is designed to be called by Workflow 1 Steps 1-4 via a sub-workflow call node, OR run manually with test data.\n\nSHEET SETUP: Create a sheet named 'Job Tracker' with these column headers in row 1:\nDate | Company | Title | Score | Fit Reasons | Gaps | Fit Summary | Salary | Application URL | Source | Tailored Headline | Tailored Summary | Coinbase Bullets | Goldman Bullets | Resume Status | Outreach Sent | Outreach Date | Contact Name | Contact Email\n\nREQUIRED CREDENTIALS:\n- 'Anthropic API Key': httpHeaderAuth, field=x-api-key\n- 'Google Sheets OAuth2': OAuth2 with Sheets scope\n- 'Slack API': Bot token with chat:write scope\n\nREQUIRED REPLACEMENTS:\n- REPLACE_WITH_YOUR_GOOGLE_SHEET_ID: The ID from your Google Sheet URL\n- REPLACE_WITH_YOUR_SLACK_CHANNEL_ID: Your personal Slack channel ID (e.g. D01ABC123)"
+}

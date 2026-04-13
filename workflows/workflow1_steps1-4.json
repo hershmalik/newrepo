@@ -1,0 +1,503 @@
+{
+  "name": "Job Discovery - Steps 1-4 (Scrape, Score, Filter)",
+  "nodes": [
+    {
+      "id": "node-schedule-trigger",
+      "name": "Daily 7AM Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [200, 300],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 7 * * *"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "node-manual-trigger",
+      "name": "Manual Test Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [200, 480],
+      "parameters": {}
+    },
+    {
+      "id": "node-apify-start-hiring-cafe",
+      "name": "Apify: Start Hiring.cafe Scrape",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [480, 300],
+      "continueOnFail": true,
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.apify.com/v2/acts/{{ $vars.APIFY_HIRING_CAFE_ACTOR_ID }}/runs",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "waitForFinish",
+              "value": "180"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={\n  \"startUrls\": [\n    {\"url\": \"https://hiring.cafe/?q=principal+product+manager\"},\n    {\"url\": \"https://hiring.cafe/?q=senior+director+product\"},\n    {\"url\": \"https://hiring.cafe/?q=TPM+fintech\"},\n    {\"url\": \"https://hiring.cafe/?q=AI+platform+compliance\"},\n    {\"url\": \"https://hiring.cafe/?q=agentic+workflow\"}\n  ],\n  \"maxPagesPerCrawl\": 5,\n  \"pageFunction\": \"async function pageFunction(context) { const { $, request, log } = context; const jobs = []; $('article, .job-card, [data-testid=job-card], .listing').each((i, el) => { const title = $(el).find('h2, h3, .job-title, [class*=title]').first().text().trim(); const company = $(el).find('.company, [class*=company], [class*=employer]').first().text().trim(); const description = $(el).find('.description, [class*=desc], p').first().text().trim(); const salary = $(el).find('[class*=salary], [class*=pay], [class*=comp]').first().text().trim(); const url = $(el).find('a').first().attr('href') || request.url; if (title && company) { jobs.push({ title, company, description: description.substring(0, 2000), salary, applicationUrl: url.startsWith('http') ? url : 'https://hiring.cafe' + url, source: 'hiring.cafe' }); } }); return jobs; }\"\n}",
+        "options": {
+          "timeout": 200000,
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "credentials": {
+        "httpQueryAuth": {
+          "id": "REPLACE_APIFY_QUERY_CRED_ID",
+          "name": "Apify API Token (Query)"
+        }
+      }
+    },
+    {
+      "id": "node-apify-start-linkedin",
+      "name": "Apify: Start LinkedIn Scrape",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [480, 480],
+      "continueOnFail": true,
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.apify.com/v2/acts/{{ $vars.APIFY_LINKEDIN_ACTOR_ID }}/runs",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "waitForFinish",
+              "value": "180"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={\n  \"queries\": [\n    \"principal product manager fintech\",\n    \"senior director product AI\",\n    \"TPM fintech compliance\",\n    \"AI platform product manager\",\n    \"agentic workflow product manager\"\n  ],\n  \"location\": \"United States\",\n  \"resultsPerPage\": 25,\n  \"maxResults\": 100,\n  \"proxy\": {\"useApifyProxy\": true}\n}",
+        "options": {
+          "timeout": 200000,
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "credentials": {
+        "httpQueryAuth": {
+          "id": "REPLACE_APIFY_QUERY_CRED_ID",
+          "name": "Apify API Token (Query)"
+        }
+      }
+    },
+    {
+      "id": "node-apify-fetch-hiring-cafe",
+      "name": "Apify: Fetch Hiring.cafe Dataset",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [760, 300],
+      "continueOnFail": true,
+      "parameters": {
+        "method": "GET",
+        "url": "=https://api.apify.com/v2/datasets/{{ $json.data.defaultDatasetId }}/items",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "format",
+              "value": "json"
+            },
+            {
+              "name": "limit",
+              "value": "200"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 30000,
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "credentials": {
+        "httpQueryAuth": {
+          "id": "REPLACE_APIFY_QUERY_CRED_ID",
+          "name": "Apify API Token (Query)"
+        }
+      }
+    },
+    {
+      "id": "node-apify-fetch-linkedin",
+      "name": "Apify: Fetch LinkedIn Dataset",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [760, 480],
+      "continueOnFail": true,
+      "parameters": {
+        "method": "GET",
+        "url": "=https://api.apify.com/v2/datasets/{{ $json.data.defaultDatasetId }}/items",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "format",
+              "value": "json"
+            },
+            {
+              "name": "limit",
+              "value": "200"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 30000,
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "credentials": {
+        "httpQueryAuth": {
+          "id": "REPLACE_APIFY_QUERY_CRED_ID",
+          "name": "Apify API Token (Query)"
+        }
+      }
+    },
+    {
+      "id": "node-merge-sources",
+      "name": "Merge Job Sources",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [1040, 390],
+      "parameters": {
+        "mode": "append"
+      }
+    },
+    {
+      "id": "node-normalize-dedup",
+      "name": "Normalize and Deduplicate Jobs",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1300, 390],
+      "parameters": {
+        "jsCode": "// Normalize items from both Apify sources into a common schema\n// and deduplicate by (company + title) key\n\nconst seen = new Set();\nconst normalized = [];\n\nfor (const item of $input.all()) {\n  const raw = item.json;\n\n  // Handle both array responses (dataset items) and single object responses\n  const jobs = Array.isArray(raw) ? raw : [raw];\n\n  for (const job of jobs) {\n    // Skip empty or error items\n    if (!job || typeof job !== 'object') continue;\n\n    // Normalize field names across Hiring.cafe and LinkedIn schemas\n    const title = (\n      job.title ||\n      job.jobTitle ||\n      job.position ||\n      job.name ||\n      ''\n    ).trim();\n\n    const company = (\n      job.company ||\n      job.companyName ||\n      job.employer ||\n      job.organizationName ||\n      ''\n    ).trim();\n\n    if (!title || !company) continue;\n\n    // Deduplicate by lowercase company+title\n    const dedupKey = `${company.toLowerCase()}::${title.toLowerCase()}`;\n    if (seen.has(dedupKey)) continue;\n    seen.add(dedupKey);\n\n    const description = (\n      job.description ||\n      job.jobDescription ||\n      job.descriptionHtml ||\n      job.snippet ||\n      ''\n    ).replace(/<[^>]*>/g, ' ').trim().substring(0, 4000);\n\n    const salary = (\n      job.salary ||\n      job.salaryRange ||\n      job.compensation ||\n      ''\n    ).toString().trim();\n\n    const applicationUrl = (\n      job.applicationUrl ||\n      job.applyUrl ||\n      job.url ||\n      job.jobUrl ||\n      job.link ||\n      ''\n    ).trim();\n\n    const source = job.source || 'unknown';\n\n    normalized.push({\n      json: {\n        title,\n        company,\n        description,\n        salary,\n        applicationUrl,\n        source,\n        scrapedAt: new Date().toISOString()\n      }\n    });\n  }\n}\n\nif (normalized.length === 0) {\n  throw new Error('No jobs found after normalization. Check Apify actor IDs and that scrapes returned data.');\n}\n\nreturn normalized;"
+      }
+    },
+    {
+      "id": "node-prepare-scoring-request",
+      "name": "Prepare Claude Scoring Request",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1560, 390],
+      "parameters": {
+        "jsCode": "// Build the Claude API request body for each job\n// The system prompt encodes Hersh's background for scoring\n\nconst SYSTEM_PROMPT = `You are an expert recruiter evaluating candidate-job fit for a senior fintech and AI product leader.\n\nCandidate background:\n- 12 years of product and program leadership at Goldman Sachs, Morgan Stanley, and Coinbase\n- Deep expertise in fintech infrastructure, compliance technology, and regulatory systems\n- Production experience with RAG systems, MCP agentic workflows, and n8n automation\n- Columbia MBA\n- Currently based in Washington DC metro area\n- Target roles: Principal PM, Senior Director of Product, Lead PM, TPM at fintech or AI infrastructure companies\n- Salary target: $250K+ base\n\nYour task: Score this job posting 1–10 based on fit with the candidate above.\n\nReturn ONLY valid JSON in this exact schema (no markdown, no extra text):\n{\n  \"score\": <integer 1-10>,\n  \"fitReasons\": [\"<reason 1>\", \"<reason 2>\", \"<reason 3>\"],\n  \"gaps\": [\"<gap 1>\", \"<gap 2>\"],\n  \"summary\": \"<one sentence summary of fit>\"\n}`;\n\nconst job = $json;\n\nconst userMessage = `Job Title: ${job.title}\nCompany: ${job.company}\nSalary: ${job.salary || 'Not specified'}\nSource: ${job.source}\n\nJob Description:\n${job.description}`;\n\nconst requestBody = {\n  model: 'claude-sonnet-4-20250514',\n  max_tokens: 1024,\n  system: SYSTEM_PROMPT,\n  messages: [\n    {\n      role: 'user',\n      content: userMessage\n    }\n  ]\n};\n\nreturn [\n  {\n    json: {\n      ...job,\n      _claudeRequestBody: JSON.stringify(requestBody)\n    }\n  }\n];"
+      }
+    },
+    {
+      "id": "node-claude-score",
+      "name": "Claude API: Score Job Fit",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1820, 390],
+      "continueOnFail": true,
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ $json._claudeRequestBody }}",
+        "options": {
+          "timeout": 60000,
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_ANTHROPIC_CRED_ID",
+          "name": "Anthropic API Key"
+        }
+      }
+    },
+    {
+      "id": "node-parse-score",
+      "name": "Parse Claude Score Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2080, 390],
+      "parameters": {
+        "jsCode": "// Extract the score and fit details from Claude's response\n// Merge back with the original job data stored in the response headers trick\n// Note: The HTTP Request node replaces $json with the API response,\n// so we need to parse what Claude returned\n\nconst apiResponse = $json;\n\n// Default values in case parsing fails\nlet score = 0;\nlet fitReasons = [];\nlet gaps = [];\nlet summary = 'Scoring failed';\nlet parseError = null;\n\ntry {\n  if (apiResponse.error) {\n    throw new Error(`Claude API error: ${apiResponse.error.message || JSON.stringify(apiResponse.error)}`);\n  }\n\n  const content = apiResponse?.content?.[0]?.text;\n  if (!content) {\n    throw new Error('No content in Claude response');\n  }\n\n  // Strip markdown code fences if Claude wrapped the JSON\n  const cleaned = content.replace(/```json\\n?/g, '').replace(/```\\n?/g, '').trim();\n  const parsed = JSON.parse(cleaned);\n\n  score = parseInt(parsed.score, 10) || 0;\n  fitReasons = Array.isArray(parsed.fitReasons) ? parsed.fitReasons : [];\n  gaps = Array.isArray(parsed.gaps) ? parsed.gaps : [];\n  summary = parsed.summary || '';\n\n} catch (err) {\n  parseError = err.message;\n}\n\n// We lose the original job data because the HTTP Request node replaced $json.\n// The job fields are NOT available here. This is handled by using the\n// StickyNote pattern: pass job data through a separate field in the request.\n// Since we embedded job data in _claudeRequestBody, re-parse it here.\nlet jobData = {};\ntry {\n  // The input to the HTTP node had job fields; they are now gone.\n  // We store them in the usage metadata comment of the request body.\n  // Alternative approach: use n8n's $node reference.\n  // Best approach: retrieve from previous node using $node[\"Prepare Claude Scoring Request\"].json\n  const prevNode = $node[\"Prepare Claude Scoring Request\"].json;\n  jobData = {\n    title: prevNode.title,\n    company: prevNode.company,\n    description: prevNode.description,\n    salary: prevNode.salary,\n    applicationUrl: prevNode.applicationUrl,\n    source: prevNode.source,\n    scrapedAt: prevNode.scrapedAt\n  };\n} catch (err) {\n  // If node reference fails, proceed with what we have\n}\n\nreturn [\n  {\n    json: {\n      ...jobData,\n      score,\n      fitReasons,\n      gaps,\n      summary,\n      parseError,\n      scoredAt: new Date().toISOString(),\n      claudeTokensUsed: apiResponse?.usage?.input_tokens + apiResponse?.usage?.output_tokens || 0\n    }\n  }\n];"
+      }
+    },
+    {
+      "id": "node-filter-score",
+      "name": "Filter: Score >= 7",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [2340, 390],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "score-condition",
+              "leftValue": "={{ $json.score }}",
+              "rightValue": 7,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true
+      }
+    },
+    {
+      "id": "node-high-score-end",
+      "name": "High Score Jobs - Ready for Steps 5-7",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [2600, 300],
+      "parameters": {}
+    },
+    {
+      "id": "node-low-score-end",
+      "name": "Low Score Jobs - Discarded",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [2600, 500],
+      "parameters": {}
+    }
+  ],
+  "connections": {
+    "Daily 7AM Trigger": {
+      "main": [
+        [
+          {
+            "node": "Apify: Start Hiring.cafe Scrape",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Apify: Start LinkedIn Scrape",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manual Test Trigger": {
+      "main": [
+        [
+          {
+            "node": "Apify: Start Hiring.cafe Scrape",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Apify: Start LinkedIn Scrape",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Apify: Start Hiring.cafe Scrape": {
+      "main": [
+        [
+          {
+            "node": "Apify: Fetch Hiring.cafe Dataset",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Apify: Start LinkedIn Scrape": {
+      "main": [
+        [
+          {
+            "node": "Apify: Fetch LinkedIn Dataset",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Apify: Fetch Hiring.cafe Dataset": {
+      "main": [
+        [
+          {
+            "node": "Merge Job Sources",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Apify: Fetch LinkedIn Dataset": {
+      "main": [
+        [
+          {
+            "node": "Merge Job Sources",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge Job Sources": {
+      "main": [
+        [
+          {
+            "node": "Normalize and Deduplicate Jobs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize and Deduplicate Jobs": {
+      "main": [
+        [
+          {
+            "node": "Prepare Claude Scoring Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Claude Scoring Request": {
+      "main": [
+        [
+          {
+            "node": "Claude API: Score Job Fit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claude API: Score Job Fit": {
+      "main": [
+        [
+          {
+            "node": "Parse Claude Score Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Claude Score Response": {
+      "main": [
+        [
+          {
+            "node": "Filter: Score >= 7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter: Score >= 7": {
+      "main": [
+        [
+          {
+            "node": "High Score Jobs - Ready for Steps 5-7",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Low Score Jobs - Discarded",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": ""
+  },
+  "staticData": null,
+  "tags": ["job-search", "workflow-1", "steps-1-4"],
+  "notes": "Workflow 1 Steps 1-4: Scrapes Hiring.cafe and LinkedIn via Apify, deduplicates results, scores each job against Hersh's background using Claude claude-sonnet-4-20250514, and filters to scores >= 7. Output feeds into Steps 5-7 (resume tailoring, Google Sheets, Slack).\n\nREQUIRED CREDENTIALS:\n- 'Apify API Token (Query)': httpQueryAuth type, field name 'token', value = your Apify API token\n- 'Anthropic API Key': httpHeaderAuth type, field name 'x-api-key', value = your Anthropic API key\n\nREQUIRED VARIABLES (set in n8n Variables):\n- APIFY_HIRING_CAFE_ACTOR_ID: e.g. 'apify~web-scraper' or your custom actor ID\n- APIFY_LINKEDIN_ACTOR_ID: e.g. 'hrishikesh1990~linkedin-jobs-scraper'"
+}
