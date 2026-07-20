@@ -13,12 +13,17 @@ A scheduled Claude routine that delivers a daily email brief with two parts:
 ## How it works
 
 - A Claude Code Remote routine fires daily at **12:00 UTC** (8:00 AM EDT /
-  7:00 AM EST) and spawns a fresh session in this environment.
+  7:00 AM EST) into the persistent Claude session that manages this routine.
 - The session researches the day's news via web search, computes the day's
   curriculum topic from the date (days since 2026-07-20, modulo topic count),
-  and writes the full brief as its final message.
-- A completion notification with the brief is sent by push and email.
+  and writes the full brief.
+- The brief is delivered as a **Slack DM** to Hersh, split into two messages
+  (Strategy & Market, then the Architecture Lesson).
 - The routine's full prompt lives in [`prompt.md`](./prompt.md) for reference.
+- Delivery history: the routine originally used a fresh-session-per-day design
+  with push/email completion notifications, but the emails never arrived, so
+  on 2026-07-20 it was rebound to the persistent session with direct Slack
+  delivery.
 
 ## Changing it
 
