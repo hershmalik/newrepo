@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ron Stewart Draft Advisor</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <h1>🏈 Ron Stewart Draft Advisor</h1>
+    <div id="draft-status" class="status">Set up your draft to begin</div>
+  </header>
+
+  <section id="setup" class="panel">
+    <h2>Draft Setup</h2>
+    <div class="setup-row">
+      <label>Teams <input type="number" id="teams" value="12" min="8" max="16" /></label>
+      <label>Your pick slot <input type="number" id="myslot" value="12" min="1" max="16" /></label>
+      <label>Rounds <input type="number" id="rounds" value="16" min="10" max="20" /></label>
+      <button id="start-draft" class="primary">Start Draft</button>
+    </div>
+    <div class="setup-row">
+      <label class="file-label">Load rankings CSV (Ron's spreadsheet)
+        <input type="file" id="csv-file" accept=".csv" />
+      </label>
+      <button id="load-sample">Use sample rankings</button>
+      <span id="rankings-status" class="muted">No rankings loaded</span>
+    </div>
+    <p class="muted small">
+      CSV columns: <code>rank,player,pos,team,tier,adp,bye</code> — tier and adp strongly recommended.
+      The sample file is a placeholder; replace it with Ron's Patreon rankings export.
+    </p>
+  </section>
+
+  <main id="draft-board" class="hidden">
+    <section class="panel" id="recs-panel">
+      <h2>Recommendations <span id="pick-context" class="muted"></span></h2>
+      <div id="recommendations"></div>
+      <button id="ai-advice" class="secondary">🤖 Ask AI for deeper advice</button>
+      <div id="ai-output" class="ai-output hidden"></div>
+    </section>
+
+    <section class="panel" id="players-panel">
+      <h2>Available Players</h2>
+      <div class="filters">
+        <input type="search" id="search" placeholder="Search player…" />
+        <div class="pos-filters">
+          <button data-pos="ALL" class="pos-btn active">ALL</button>
+          <button data-pos="RB" class="pos-btn">RB</button>
+          <button data-pos="WR" class="pos-btn">WR</button>
+          <button data-pos="QB" class="pos-btn">QB</button>
+          <button data-pos="TE" class="pos-btn">TE</button>
+        </div>
+      </div>
+      <p class="muted small">Click <b>Gone</b> when someone else drafts a player, <b>Mine</b> when you draft them.</p>
+      <div id="player-list"></div>
+    </section>
+
+    <aside class="panel" id="roster-panel">
+      <h2>My Roster</h2>
+      <div id="my-picks-schedule" class="muted small"></div>
+      <ul id="my-roster"></ul>
+      <h3>Recent picks</h3>
+      <ul id="pick-log" class="small"></ul>
+      <button id="undo" class="secondary">↩ Undo last pick</button>
+    </aside>
+  </main>
+
+  <script src="engine.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
