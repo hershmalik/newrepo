@@ -1,0 +1,14 @@
+{
+  "name": "ron-stewart-draft-advisor",
+  "version": "0.1.0",
+  "description": "Live fantasy football draft assistant built on Ron Stewart's rankings and Hero RB methodology",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test/engine.test.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.115.0",
+    "express": "^4.21.0"
+  }
+}
