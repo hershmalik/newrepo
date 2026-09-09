@@ -86,6 +86,37 @@ test('scoring rewards the Texans-WR scenario', () => {
   assert.ok(score >= 100, `expected >=100, got ${score}: ${reasons.join('; ')}`);
 });
 
+test('players off the active roster are unavailable, practice squad excluded', () => {
+  const teams = [{ id: '1', abbrev: 'SEA', name: 'Seattle Seahawks' }];
+  const rosters = {
+    1: {
+      a1: { id: 'a1', name: 'Real Starter', position: 'WR', experienceYears: 4, rosterStatus: 'Active' },
+      a2: { id: 'a2', name: 'Cut Guy', position: 'WR', experienceYears: 3, rosterStatus: 'Day-To-Day' },
+      a3: { id: 'a3', name: 'Real Backup', position: 'WR', experienceYears: 2, rosterStatus: 'Active' },
+      a4: { id: 'a4', name: 'Squad Guy', position: 'WR', experienceYears: 0, rosterStatus: 'Practice Squad' },
+    },
+  };
+  const depthCharts = {
+    1: {
+      wr: [
+        { rank: 1, athleteId: 'a1' },
+        { rank: 2, athleteId: 'a2' },
+        { rank: 3, athleteId: 'a3' },
+        { rank: 4, athleteId: 'a4' },
+      ],
+    },
+  };
+  const sit = buildSituations({ teams, rosters, depthCharts, injuries: [] })['1'];
+  const room = sit.rooms.wr;
+  assert.ok(!room.players.some((p) => p.name === 'Squad Guy'), 'practice squad excluded');
+  const cut = room.players.find((p) => p.name === 'Cut Guy');
+  assert.equal(cut.missProb, 1, 'non-Active roster status means unavailable');
+  const backup = room.players.find((p) => p.name === 'Real Backup');
+  assert.equal(backup.elevation, 1, 'players below a cut guy are elevated');
+  const starter = room.players.find((p) => p.name === 'Real Starter');
+  assert.deepEqual(nextMenUp(room, starter, 2).map((p) => p.name), ['Real Backup'], 'cut players are never the next man up');
+});
+
 test('nextMenUp skips injured players', () => {
   const sit = fixtureSituation()['1'];
   const room = sit.rooms.wr;

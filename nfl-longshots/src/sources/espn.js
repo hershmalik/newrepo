@@ -55,6 +55,10 @@ export async function getRoster(teamId) {
           name: a.displayName,
           position: a.position?.abbreviation || '',
           experienceYears: a.experience?.years ?? null,
+          // 'Active' = on the 53. Anything else (Practice Squad, Day-To-Day,
+          // IR limbo, recently waived) means he's not suiting up — ESPN keeps
+          // cut players on this feed for a while, so this field is load-bearing.
+          rosterStatus: a.status?.name || 'Active',
         };
       }
     }

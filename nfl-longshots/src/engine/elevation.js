@@ -52,7 +52,15 @@ export function buildSituations({ teams, rosters, depthCharts, injuries }) {
         .map((slot) => {
           const p = roster[slot.athleteId];
           if (!p) return null;
+          // Practice-squad players can't play without a call-up; keep them
+          // out of the room entirely (depth charts sometimes still list them).
+          if (p.rosterStatus === 'Practice Squad') return null;
           const inj = injuryByAthlete.get(String(slot.athleteId));
+          // Not on the active 53 (cut, IR-designated, in limbo) => he won't
+          // play, whatever the injury report says — and everyone below him
+          // is genuinely elevated.
+          const offActiveRoster = p.rosterStatus && p.rosterStatus !== 'Active';
+          const injMiss = inj ? unavailability(inj.status) : 0;
           return {
             athleteId: slot.athleteId,
             rank: slot.rank,
@@ -60,9 +68,9 @@ export function buildSituations({ teams, rosters, depthCharts, injuries }) {
             nameKey: normalizeName(p.name),
             position: POS_LABEL[pos] || p.position,
             experienceYears: p.experienceYears,
-            status: inj?.status || 'Active',
+            status: offActiveRoster ? `Not on active roster (${p.rosterStatus})` : inj?.status || 'Active',
             injuryComment: inj?.comment || '',
-            missProb: inj ? unavailability(inj.status) : 0,
+            missProb: offActiveRoster ? 1 : injMiss,
           };
         })
         .filter(Boolean);
