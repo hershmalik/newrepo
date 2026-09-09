@@ -1,5 +1,13 @@
 // Odds math, name matching, and fetch helpers shared across the app.
 
+// Node's fetch ignores HTTP(S)_PROXY env vars by default; honor them so the
+// app works behind corporate/cloud proxies. (Set NODE_EXTRA_CA_CERTS too if
+// your proxy re-signs TLS.)
+if (process.env.HTTPS_PROXY || process.env.https_proxy || process.env.HTTP_PROXY) {
+  const { setGlobalDispatcher, EnvHttpProxyAgent } = await import('undici');
+  setGlobalDispatcher(new EnvHttpProxyAgent());
+}
+
 export function americanToDecimal(a) {
   const n = Number(a);
   return n > 0 ? 1 + n / 100 : 1 + 100 / -n;
