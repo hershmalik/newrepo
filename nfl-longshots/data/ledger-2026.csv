@@ -26,3 +26,18 @@ date,book,bet,market,odds,boosted_odds,stake,result,returned,signal,source,notes
 2026-09-20,Fanatics,Jayden Daniels 2+ TDs,2+ TD,2000,,7.00,V,7.00,qb-rush-matchup,claude,void - injury covered (dislocated elbow in-game)
 2026-09-20,Fanatics,Arizona Defense anytime,dst anytime,650,820,10.00,L,0.00,backup-qb-dst,claude,vs Lock; Lock threw 3 TD
 2026-09-20,Fanatics,Luke Farrell 2+ TDs,2+ TD,10000,,5.00,L,0.00,other,user,advised cash-out at $2.50
+2026-09-13,Fanatics,Washington Commanders ML,moneyline,340,,10.00,L,0.00,other,user,
+2026-09-13,Fanatics,Roman Wilson anytime,anytime TD,1700,,10.00,L,0.00,other,user,wk1 not recommended
+2026-09-13,Fanatics,Michael Pittman 2+ TDs,2+ TD,12500,,10.00,L,0.00,other,user,
+2026-09-13,Fanatics,Jaxson Dart 2+ TDs,2+ TD,1600,,10.00,L,0.00,qb-rush-matchup,claude,top pick wk1; threw 3 TD instead
+2026-09-13,Fanatics,George Pickens 3+ TDs,3+ TD,12500,19000,5.00,L,0.00,other,user,50% boost used here
+2026-09-13,Fanatics,Jaxson Dart 1st drive TD,drive prop,1300,,5.00,L,0.00,other,user,
+2026-09-13,Fanatics,Cam Skattebo 3+ TDs,3+ TD,3500,,10.00,L,0.00,lead-back-3plus,claude,recommended Sat then downgraded to fair; placed Fri
+2026-09-13,Fanatics,George Pickens 2+ TDs,2+ TD,1600,,5.00,L,0.00,other,user,
+2026-09-13,Fanatics,Odell Beckham Jr. anytime,anytime TD,850,,5.00,L,0.00,other,user,conditional on Nabers OUT; Nabers played
+2026-09-14,Fanatics,RJ Harvey 2+ TDs,2+ TD,3300,4300,10.00,L,0.00,role-td-specialist,claude,30% boost used
+2026-09-13,Fanatics,Jaxson Dart 3+ TDs,3+ TD,12500,,5.00,L,0.00,qb-rush-matchup,claude,moonshot version
+2026-09-13,Fanatics,Malachi Fields 2+ TDs,2+ TD,10000,,5.00,L,0.00,other,user,wk1 not recommended
+2026-09-14,Fanatics,Bo Nix anytime,anytime TD,430,,10.00,L,0.00,qb-rush-matchup,claude,KC #4 vs QB rush TDs
+2026-09-14,Fanatics,Denver Broncos ML,moneyline,240,,10.00,L,0.00,other,user,
+2026-09-14,Fanatics,Denver Broncos ML (live),moneyline,560,,10.00,L,0.00,other,user,
