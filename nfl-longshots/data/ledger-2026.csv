@@ -1,0 +1,16 @@
+date,book,bet,market,odds,boosted_odds,stake,result,returned,signal,source,notes
+2026-09-20,Fanatics,Daniel Jones 2+ TDs,2+ TD,8000,,5.00,L,0.00,qb-rush-matchup,claude,KC allowed most QB rush TDs; Jones 1 carry
+2026-09-20,Fanatics,Washington Commanders ML,moneyline,560,,10.00,L,0.00,other,user,
+2026-09-20,Fanatics,Treylon Burks anytime,anytime TD,2500,,5.00,L,0.00,other,user,finder noise name; not recommended
+2026-09-20,Fanatics,Anthony Gould anytime,anytime TD,2500,,5.00,L,0.00,other,user,
+2026-09-20,Fanatics,Daniel Jones anytime,anytime TD,550,830,8.00,L,0.00,qb-rush-matchup,claude,50% boost used
+2026-09-20,Fanatics,Laquon Treadwell anytime,anytime TD,1200,,5.00,L,0.00,other,user,
+2026-09-21,Fanatics,Darnell Mooney 2+ TDs,2+ TD,15000,,5.00,L,0.00,other,user,advised against (1 TD in 15 games)
+2026-09-21,Fanatics,Colby Parkinson 2+ TDs,2+ TD,3300,,5.00,L,0.00,injury-elevation-2plus,claude,conditional on Nacua out (he was)
+2026-09-21,FanDuel,Davante Adams 2+ TDs,2+ TD,850,,5.00,W,47.50,multi-td-profile,claude,29% multi-TD rate 2025
+2026-09-24,Fanatics,Tennessee Defense anytime,dst anytime,800,1200,10.00,L,0.00,backup-qb-dst,claude,vs Winston; NYG scored 0 TD
+2026-09-23,Fanatics,Adonai Mitchell 2+ TDs,2+ TD,4000,,4.00,V,4.00,injury-elevation-2plus,claude,void - inactive (Bet Protect+)
+2026-09-24,Fanatics,Green Bay Defense anytime (live),dst anytime,1000,1500,10.00,L,0.00,rusty-qb-dst,claude,Penix first game off ACL
+2026-09-23,Fanatics,Kaelon Black anytime,anytime TD,290,,5.00,L,0.00,matchup-rb2,claude,carries fell to 7 in wk2; downgraded later
+2026-09-24,Fanatics,Seattle Defense anytime,dst anytime,750,,10.00,L,0.00,backup-qb-dst,claude,vs Mariota; WAS D scored instead (pick-six of Darnold)
+2026-09-26,Fanatics,Mike Gesicki 2+ TDs,2+ TD,5500,,4.00,L,0.00,injury-elevation-2plus,claude,anytime hit separately
