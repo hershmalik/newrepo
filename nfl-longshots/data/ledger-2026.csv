@@ -49,3 +49,28 @@ date,book,bet,market,odds,boosted_odds,stake,result,returned,signal,source,notes
 2026-09-13,Fanatics,Pittsburgh Defense 2+ TDs,dst 2+,10000,,10.00,L,0.00,backup-qb-dst-2plus,claude,vs Cooper Rush; anytime hit
 2026-09-13,Fanatics,Tez Johnson 2+ TDs,2+ TD,8000,,10.00,L,0.00,injury-elevation-2plus,claude,McMillan doubtful; CIN weak D
 2026-09-13,FanDuel,Pittsburgh Defense anytime,dst anytime,750,,10.00,W,85.00,backup-qb-dst,claude,T.J. Watt pick-six of Cooper Rush
+2026-09-27,DraftKings,Jacob Cowing anytime (live),anytime TD,1300,,5.00,L,0.00,other,user,live in-game
+2026-09-27,DraftKings,Jacob Cowing 2+ TDs (live),2+ TD,25000,,5.00,L,0.00,other,user,live in-game
+2026-09-27,DraftKings,Luke Farrell 2+ TDs (live),2+ TD,15000,,5.00,L,0.00,other,user,live in-game
+2026-09-27,DraftKings,Jordan Watkins anytime (live),anytime TD,900,,5.00,L,0.00,other,user,live in-game
+2026-09-27,DraftKings,Jordan Watkins 2+ TDs (live),2+ TD,7500,,5.00,L,0.00,other,user,live in-game
+2026-09-27,DraftKings,KhaDarel Hodge anytime (live),anytime TD,1100,,5.00,L,0.00,other,user,live in-game
+2026-09-27,DraftKings,KhaDarel Hodge 3rd TD scorer (live),3rd TD,2800,,5.00,L,0.00,other,user,live in-game
+2026-09-27,DraftKings,KhaDarel Hodge 2+ TDs (live),2+ TD,18000,,5.00,L,0.00,other,user,live in-game
+2026-09-27,DraftKings,Michael Pittman 2+ TDs (live),2+ TD,16000,24000,5.00,L,0.00,other,user,live; 50% boost used
+2026-09-27,DraftKings,Pat Freiermuth anytime,anytime TD,290,,10.00,L,0.00,matchup-te,claude,CIN worst vs TE; user-initiated but on card
+2026-09-27,DraftKings,Pat Freiermuth 2+ TDs,2+ TD,3000,4500,10.00,L,0.00,matchup-te-2plus,claude,50% boost used
+2026-09-27,DraftKings,SGP Fields + TEN D + Likely,sgp,14000,21000,8.00,L,0.00,backup-qb-sgp,claude,50% SGP boost; NYG scored 0 TD
+2026-09-27,DraftKings,Parlay TEN D + Gesicki + Jennings + Boutte,parlay,71721,86067,5.00,L,0.00,cross-game-parlay,claude,20% Stepped Up boost; Gesicki leg hit
+2026-09-27,DraftKings,Kyren Williams 2+ TDs,2+ TD,550,825,12.00,?,,matchup-rb-2plus,claude,50% Rams boost; RESULT PENDING
+2026-09-27,DraftKings,8-pick parlay (1+ receptions x8),parlay,3016,,5.00,L,0.00,other,user,early exit protected
+2026-09-27,DraftKings,Devontez Walker anytime,anytime TD,650,,5.00,L,0.00,injury-elevation-anytime,claude,Flowers snap count
+2026-09-27,DraftKings,Devontez Walker 2+ TDs,2+ TD,8000,12000,10.00,L,0.00,injury-elevation-2plus,claude,50% boost; recommended $3 more - placed $10
+2026-09-27,DraftKings,Jalen Coker 2+ TDs,2+ TD,2000,,2.00,L,0.00,other,user,
+2026-09-27,DraftKings,Darnell Washington 2+ TDs,2+ TD,12000,,10.00,L,0.00,other,user,advised against (blocking TE)
+2026-09-27,DraftKings,Darnell Washington anytime,anytime TD,850,,5.00,L,0.00,other,user,advised against
+2026-09-27,DraftKings,Germie Bernard 2+ TDs,2+ TD,8000,,10.00,L,0.00,other,user,advised $2 flier max; placed $10
+2026-09-27,DraftKings,Roman Wilson anytime,anytime TD,600,,5.00,W,35.00,other,user,advised against ($3 max); scored 38-yd TD
+2026-09-27,DraftKings,Eli Heidenreich 2+ TDs,2+ TD,7500,,3.00,V,3.00,injury-elevation-2plus,claude,cancelled by book; stake returned
+2026-09-27,DraftKings,Eli Heidenreich anytime,anytime TD,850,,8.00,V,8.00,injury-elevation-anytime,claude,cancelled by book; stake returned
+2026-09-24,DraftKings,Brian Robinson Jr. 2+ TDs (live),2+ TD,6000,,5.00,L,0.00,other,user,live TNF
