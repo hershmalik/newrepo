@@ -41,3 +41,11 @@ date,book,bet,market,odds,boosted_odds,stake,result,returned,signal,source,notes
 2026-09-14,Fanatics,Bo Nix anytime,anytime TD,430,,10.00,L,0.00,qb-rush-matchup,claude,KC #4 vs QB rush TDs
 2026-09-14,Fanatics,Denver Broncos ML,moneyline,240,,10.00,L,0.00,other,user,
 2026-09-14,Fanatics,Denver Broncos ML (live),moneyline,560,,10.00,L,0.00,other,user,
+2026-09-09,Fanatics,Rashid Shaheed anytime,anytime TD,350,525,10.00,L,0.00,other,user,50% boost used; wk1 opener
+2026-09-09,FanDuel,1+ points scored NE@SEA (promo),promo,10000,101,25.00,W,50.25,promo,user,10000% boost customer special
+2026-09-13,Fanatics,Pittsburgh Defense first TD,dst first TD,3300,,5.00,L,0.00,backup-qb-dst,user,recommended anytime/2+; first-TD variant was user's
+2026-09-09,Fanatics,Cooper Kupp anytime,anytime TD,1100,,5.00,L,0.00,other,user,wk1 opener
+2026-09-09,Fanatics,Cooper Kupp anytime,anytime TD,700,,5.00,L,0.00,other,user,wk1 opener duplicate
+2026-09-13,Fanatics,Pittsburgh Defense 2+ TDs,dst 2+,10000,,10.00,L,0.00,backup-qb-dst-2plus,claude,vs Cooper Rush; anytime hit
+2026-09-13,Fanatics,Tez Johnson 2+ TDs,2+ TD,8000,,10.00,L,0.00,injury-elevation-2plus,claude,McMillan doubtful; CIN weak D
+2026-09-13,FanDuel,Pittsburgh Defense anytime,dst anytime,750,,10.00,W,85.00,backup-qb-dst,claude,T.J. Watt pick-six of Cooper Rush
