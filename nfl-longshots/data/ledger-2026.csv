@@ -74,3 +74,8 @@ date,book,bet,market,odds,boosted_odds,stake,result,returned,signal,source,notes
 2026-09-27,DraftKings,Eli Heidenreich 2+ TDs,2+ TD,7500,,3.00,V,3.00,injury-elevation-2plus,claude,cancelled by book; stake returned
 2026-09-27,DraftKings,Eli Heidenreich anytime,anytime TD,850,,8.00,V,8.00,injury-elevation-anytime,claude,cancelled by book; stake returned
 2026-09-24,DraftKings,Brian Robinson Jr. 2+ TDs (live),2+ TD,6000,,5.00,L,0.00,other,user,live TNF
+2026-09-20,FanDuel,Germie Bernard 2+ TDs,2+ TD,15000,,5.00,L,0.00,other,user,advised against (0 targets wk1)
+2026-09-20,FanDuel,Darnell Washington 2+ TDs,2+ TD,10000,,5.00,L,0.00,other,user,advised against (blocking TE)
+2026-09-20,FanDuel,Roman Wilson 2+ TDs,2+ TD,6000,,5.00,L,0.00,injury-elevation-2plus,claude,Pittman out; PIT scored 3 pts
+2026-09-20,FanDuel,DK Metcalf anytime,anytime TD,260,,5.00,L,0.00,injury-elevation-anytime,claude,Pittman out; PIT scored 3 pts
+2026-09-20,FanDuel,Roman Wilson first TD,first TD,2200,,5.00,L,0.00,other,user,user-initiated; endorsed as fair
