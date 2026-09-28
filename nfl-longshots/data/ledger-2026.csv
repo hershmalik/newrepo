@@ -109,3 +109,14 @@ date,book,bet,market,odds,boosted_odds,stake,result,returned,signal,source,notes
 2026-09-24,DraftKings,SGP London + ATL,sgp,3000,4500,10.00,L,0.00,other,user,
 2026-09-24,DraftKings,Matthew Golden 2+ TDs (live),2+ TD,1600,,5.00,L,0.00,other,user,live
 2026-09-24,DraftKings,SGP Watson + Bijan + Golden anytime,sgp,1500,2250,5.00,W,117.50,other,user,50% parlay boost; all three scored
+2026-09-24,BetRivers,Josh Palmer anytime,anytime TD,650,,10.00,L,0.00,other,user,not on card
+2026-09-26,Fanatics,SGP Schultz 2+ TDs + 50+ rec yds (FanCash),sgp,1800,,6.00,L,0.00,other,user,FanCash; card had Schultz 2+ single
+2026-09-26,Fanatics,Kayshon Boutte anytime (FanCash),anytime TD,290,,8.00,L,0.00,injury-elevation-anytime,claude,FanCash; Collins out
+2026-09-26,Fanatics,Mike Gesicki 2+ TDs (FanCash),2+ TD,3500,,5.00,L,0.00,injury-elevation-2plus,claude,FanCash; scored once
+2026-09-26,Fanatics,Pat Freiermuth 2+ TDs (FanCash),2+ TD,3000,,4.00,L,0.00,matchup-te-2plus,claude,FanCash
+2026-09-24,Fanatics,Josh Palmer anytime (FanCash),anytime TD,390,,20.00,L,0.00,other,user,FanCash; duplicate of BetRivers
+2026-09-26,Fanatics,Pat Freiermuth anytime (FanCash),anytime TD,410,,8.00,L,0.00,matchup-te,claude,FanCash
+2026-09-26,Fanatics,Jauan Jennings anytime (FanCash),anytime TD,575,,7.00,L,0.00,role-td-specialist,claude,FanCash; 53% TD rate 2025
+2026-09-26,Fanatics,Jauan Jennings 2+ TDs (FanCash),2+ TD,5000,,4.00,L,0.00,role-td-specialist-2plus,claude,FanCash
+2026-09-26,Fanatics,Devontez Walker anytime (FanCash),anytime TD,475,,3.00,L,0.00,injury-elevation-anytime,claude,FanCash
+2026-09-26,Fanatics,Devontez Walker 2+ TDs (FanCash),2+ TD,5000,,5.00,L,0.00,injury-elevation-2plus,claude,FanCash
