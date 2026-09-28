@@ -1,0 +1,130 @@
+date,book,bet,market,odds,boosted_odds,stake,result,returned,signal,source,notes
+2026-09-20,Fanatics,Daniel Jones 2+ TDs,2+ TD,8000,,5.00,L,0.00,qb-rush-matchup,claude,KC allowed most QB rush TDs; Jones 1 carry
+2026-09-20,Fanatics,Washington Commanders ML,moneyline,560,,10.00,L,0.00,other,user,
+2026-09-20,Fanatics,Treylon Burks anytime,anytime TD,2500,,5.00,L,0.00,other,user,finder noise name; not recommended
+2026-09-20,Fanatics,Anthony Gould anytime,anytime TD,2500,,5.00,L,0.00,other,user,
+2026-09-20,Fanatics,Daniel Jones anytime,anytime TD,550,830,8.00,L,0.00,qb-rush-matchup,claude,50% boost used
+2026-09-20,Fanatics,Laquon Treadwell anytime,anytime TD,1200,,5.00,L,0.00,other,user,
+2026-09-21,Fanatics,Darnell Mooney 2+ TDs,2+ TD,15000,,5.00,L,0.00,other,user,advised against (1 TD in 15 games)
+2026-09-21,Fanatics,Colby Parkinson 2+ TDs,2+ TD,3300,,5.00,L,0.00,injury-elevation-2plus,claude,conditional on Nacua out (he was)
+2026-09-21,FanDuel,Davante Adams 2+ TDs,2+ TD,850,,5.00,W,47.50,multi-td-profile,claude,29% multi-TD rate 2025
+2026-09-24,Fanatics,Tennessee Defense anytime,dst anytime,800,1200,10.00,L,0.00,backup-qb-dst,claude,vs Winston; NYG scored 0 TD
+2026-09-23,Fanatics,Adonai Mitchell 2+ TDs,2+ TD,4000,,4.00,V,4.00,injury-elevation-2plus,claude,void - inactive (Bet Protect+)
+2026-09-24,Fanatics,Green Bay Defense anytime (live),dst anytime,1000,1500,10.00,L,0.00,rusty-qb-dst,claude,Penix first game off ACL
+2026-09-23,Fanatics,Kaelon Black anytime,anytime TD,290,,5.00,L,0.00,matchup-rb2,claude,carries fell to 7 in wk2; downgraded later
+2026-09-24,Fanatics,Seattle Defense anytime,dst anytime,750,,10.00,L,0.00,backup-qb-dst,claude,vs Mariota; WAS D scored instead (pick-six of Darnold)
+2026-09-26,Fanatics,Mike Gesicki 2+ TDs,2+ TD,5500,,4.00,L,0.00,injury-elevation-2plus,claude,anytime hit separately
+2026-09-20,Fanatics,Devontez Walker 2+ TDs,2+ TD,8000,,3.00,L,0.00,injury-elevation-2plus,claude,Flowers out; Walker 2 targets
+2026-09-20,Fanatics,Devaughn Vele anytime,anytime TD,390,,5.00,L,0.00,volume-anytime,claude,9 tgt wk1; Saints catch-up script
+2026-09-20,Fanatics,Noah Fant 2+ TDs,2+ TD,12500,,4.00,L,0.00,volume-2plus,claude,8 tgt wk1 (scored twice the FOLLOWING week when not bet)
+2026-09-20,Fanatics,Parlay CAR D + CHI D + SEA D,dst parlay,61100,,3.00,L,0.00,backup-qb-dst-parlay,claude,wrong leg (SEA vs starter); CAR leg hit; not cashed out
+2026-09-20,Fanatics,Travis Homer anytime,anytime TD,1900,,5.00,L,0.00,other,user,PIT RB4
+2026-09-20,Fanatics,Parlay CAR D + CHI D + ARI D,dst parlay,50900,,3.00,L,0.00,backup-qb-dst-parlay,claude,CAR leg hit (Rush pick-six); CHI/ARI no
+2026-09-20,Fanatics,Jonah Coleman 2+ TDs,2+ TD,3300,,5.00,L,0.00,other,user,conditional on Dobbins+Harvey out; both played
+2026-09-20,Fanatics,MarShawn Lloyd 2+ TDs,2+ TD,1000,,8.00,L,0.00,matchup-2plus,claude,NYJ worst vs RB; scored once
+2026-09-20,Fanatics,Dalton Schultz anytime,anytime TD,330,,5.00,L,0.00,matchup-te,claude,CIN worst vs TE
+2026-09-20,Fanatics,Jayden Daniels 2+ TDs,2+ TD,2000,,7.00,V,7.00,qb-rush-matchup,claude,void - injury covered (dislocated elbow in-game)
+2026-09-20,Fanatics,Arizona Defense anytime,dst anytime,650,820,10.00,L,0.00,backup-qb-dst,claude,vs Lock; Lock threw 3 TD
+2026-09-20,Fanatics,Luke Farrell 2+ TDs,2+ TD,10000,,5.00,L,0.00,other,user,advised cash-out at $2.50
+2026-09-13,Fanatics,Washington Commanders ML,moneyline,340,,10.00,L,0.00,other,user,
+2026-09-13,Fanatics,Roman Wilson anytime,anytime TD,1700,,10.00,L,0.00,other,user,wk1 not recommended
+2026-09-13,Fanatics,Michael Pittman 2+ TDs,2+ TD,12500,,10.00,L,0.00,other,user,
+2026-09-13,Fanatics,Jaxson Dart 2+ TDs,2+ TD,1600,,10.00,L,0.00,qb-rush-matchup,claude,top pick wk1; threw 3 TD instead
+2026-09-13,Fanatics,George Pickens 3+ TDs,3+ TD,12500,19000,5.00,L,0.00,other,user,50% boost used here
+2026-09-13,Fanatics,Jaxson Dart 1st drive TD,drive prop,1300,,5.00,L,0.00,other,user,
+2026-09-13,Fanatics,Cam Skattebo 3+ TDs,3+ TD,3500,,10.00,L,0.00,lead-back-3plus,claude,recommended Sat then downgraded to fair; placed Fri
+2026-09-13,Fanatics,George Pickens 2+ TDs,2+ TD,1600,,5.00,L,0.00,other,user,
+2026-09-13,Fanatics,Odell Beckham Jr. anytime,anytime TD,850,,5.00,L,0.00,other,user,conditional on Nabers OUT; Nabers played
+2026-09-14,Fanatics,RJ Harvey 2+ TDs,2+ TD,3300,4300,10.00,L,0.00,role-td-specialist,claude,30% boost used
+2026-09-13,Fanatics,Jaxson Dart 3+ TDs,3+ TD,12500,,5.00,L,0.00,qb-rush-matchup,claude,moonshot version
+2026-09-13,Fanatics,Malachi Fields 2+ TDs,2+ TD,10000,,5.00,L,0.00,other,user,wk1 not recommended
+2026-09-14,Fanatics,Bo Nix anytime,anytime TD,430,,10.00,L,0.00,qb-rush-matchup,claude,KC #4 vs QB rush TDs
+2026-09-14,Fanatics,Denver Broncos ML,moneyline,240,,10.00,L,0.00,other,user,
+2026-09-14,Fanatics,Denver Broncos ML (live),moneyline,560,,10.00,L,0.00,other,user,
+2026-09-09,Fanatics,Rashid Shaheed anytime,anytime TD,350,525,10.00,L,0.00,other,user,50% boost used; wk1 opener
+2026-09-09,FanDuel,1+ points scored NE@SEA (promo),promo,10000,101,25.00,W,50.25,promo,user,10000% boost customer special
+2026-09-13,Fanatics,Pittsburgh Defense first TD,dst first TD,3300,,5.00,L,0.00,backup-qb-dst,user,recommended anytime/2+; first-TD variant was user's
+2026-09-09,Fanatics,Cooper Kupp anytime,anytime TD,1100,,5.00,L,0.00,other,user,wk1 opener
+2026-09-09,Fanatics,Cooper Kupp anytime,anytime TD,700,,5.00,L,0.00,other,user,wk1 opener duplicate
+2026-09-13,Fanatics,Pittsburgh Defense 2+ TDs,dst 2+,10000,,10.00,L,0.00,backup-qb-dst-2plus,claude,vs Cooper Rush; anytime hit
+2026-09-13,Fanatics,Tez Johnson 2+ TDs,2+ TD,8000,,10.00,L,0.00,injury-elevation-2plus,claude,McMillan doubtful; CIN weak D
+2026-09-13,FanDuel,Pittsburgh Defense anytime,dst anytime,750,,10.00,W,85.00,backup-qb-dst,claude,T.J. Watt pick-six of Cooper Rush
+2026-09-27,DraftKings,Jacob Cowing anytime (live),anytime TD,1300,,5.00,L,0.00,other,user,live in-game
+2026-09-27,DraftKings,Jacob Cowing 2+ TDs (live),2+ TD,25000,,5.00,L,0.00,other,user,live in-game
+2026-09-27,DraftKings,Luke Farrell 2+ TDs (live),2+ TD,15000,,5.00,L,0.00,other,user,live in-game
+2026-09-27,DraftKings,Jordan Watkins anytime (live),anytime TD,900,,5.00,L,0.00,other,user,live in-game
+2026-09-27,DraftKings,Jordan Watkins 2+ TDs (live),2+ TD,7500,,5.00,L,0.00,other,user,live in-game
+2026-09-27,DraftKings,KhaDarel Hodge anytime (live),anytime TD,1100,,5.00,L,0.00,other,user,live in-game
+2026-09-27,DraftKings,KhaDarel Hodge 3rd TD scorer (live),3rd TD,2800,,5.00,L,0.00,other,user,live in-game
+2026-09-27,DraftKings,KhaDarel Hodge 2+ TDs (live),2+ TD,18000,,5.00,L,0.00,other,user,live in-game
+2026-09-27,DraftKings,Michael Pittman 2+ TDs (live),2+ TD,16000,24000,5.00,L,0.00,other,user,live; 50% boost used
+2026-09-27,DraftKings,Pat Freiermuth anytime,anytime TD,290,,10.00,L,0.00,matchup-te,claude,CIN worst vs TE; user-initiated but on card
+2026-09-27,DraftKings,Pat Freiermuth 2+ TDs,2+ TD,3000,4500,10.00,L,0.00,matchup-te-2plus,claude,50% boost used
+2026-09-27,DraftKings,SGP Fields + TEN D + Likely,sgp,14000,21000,8.00,L,0.00,backup-qb-sgp,claude,50% SGP boost; NYG scored 0 TD
+2026-09-27,DraftKings,Parlay TEN D + Gesicki + Jennings + Boutte,parlay,71721,86067,5.00,L,0.00,cross-game-parlay,claude,20% Stepped Up boost; Gesicki leg hit
+2026-09-27,DraftKings,Kyren Williams 2+ TDs,2+ TD,550,825,12.00,?,,matchup-rb-2plus,claude,50% Rams boost; RESULT PENDING
+2026-09-27,DraftKings,8-pick parlay (1+ receptions x8),parlay,3016,,5.00,L,0.00,other,user,early exit protected
+2026-09-27,DraftKings,Devontez Walker anytime,anytime TD,650,,5.00,L,0.00,injury-elevation-anytime,claude,Flowers snap count
+2026-09-27,DraftKings,Devontez Walker 2+ TDs,2+ TD,8000,12000,10.00,L,0.00,injury-elevation-2plus,claude,50% boost; recommended $3 more - placed $10
+2026-09-27,DraftKings,Jalen Coker 2+ TDs,2+ TD,2000,,2.00,L,0.00,other,user,
+2026-09-27,DraftKings,Darnell Washington 2+ TDs,2+ TD,12000,,10.00,L,0.00,other,user,advised against (blocking TE)
+2026-09-27,DraftKings,Darnell Washington anytime,anytime TD,850,,5.00,L,0.00,other,user,advised against
+2026-09-27,DraftKings,Germie Bernard 2+ TDs,2+ TD,8000,,10.00,L,0.00,other,user,advised $2 flier max; placed $10
+2026-09-27,DraftKings,Roman Wilson anytime,anytime TD,600,,5.00,W,35.00,other,user,advised against ($3 max); scored 38-yd TD
+2026-09-27,DraftKings,Eli Heidenreich 2+ TDs,2+ TD,7500,,3.00,V,3.00,injury-elevation-2plus,claude,cancelled by book; stake returned
+2026-09-27,DraftKings,Eli Heidenreich anytime,anytime TD,850,,8.00,V,8.00,injury-elevation-anytime,claude,cancelled by book; stake returned
+2026-09-24,DraftKings,Brian Robinson Jr. 2+ TDs (live),2+ TD,6000,,5.00,L,0.00,other,user,live TNF
+2026-09-20,FanDuel,Germie Bernard 2+ TDs,2+ TD,15000,,5.00,L,0.00,other,user,advised against (0 targets wk1)
+2026-09-20,FanDuel,Darnell Washington 2+ TDs,2+ TD,10000,,5.00,L,0.00,other,user,advised against (blocking TE)
+2026-09-20,FanDuel,Roman Wilson 2+ TDs,2+ TD,6000,,5.00,L,0.00,injury-elevation-2plus,claude,Pittman out; PIT scored 3 pts
+2026-09-20,FanDuel,DK Metcalf anytime,anytime TD,260,,5.00,L,0.00,injury-elevation-anytime,claude,Pittman out; PIT scored 3 pts
+2026-09-20,FanDuel,Roman Wilson first TD,first TD,2200,,5.00,L,0.00,other,user,user-initiated; endorsed as fair
+2026-09-09,DraftKings,Corey Kiner 2+ TDs,2+ TD,7500,,10.00,L,0.00,injury-elevation-2plus,claude,Henderson out; wk1 opener
+2026-09-09,DraftKings,Tory Horton 2+ TDs,2+ TD,10000,,10.00,L,0.00,injury-discount-2plus,claude,Q-tag price on active player
+2026-09-09,DraftKings,Montorie Foster 2+ TDs,2+ TD,15000,,10.00,L,0.00,other,user,conditional on Horton OUT; Horton played
+2026-09-09,DraftKings,Tory Horton anytime,anytime TD,800,,5.00,L,0.00,other,user,took both branches of a conditional
+2026-09-09,DraftKings,Montorie Foster anytime,anytime TD,1400,,5.00,L,0.00,other,user,took both branches of a conditional
+2026-09-13,DraftKings,Zavion Thomas 2+ TDs,2+ TD,9000,,5.00,L,0.00,other,user,flagged as buried WR4
+2026-09-13,DraftKings,Ted Hurst 2+ TDs,2+ TD,6000,,10.00,L,0.00,injury-elevation-2plus,claude,McMillan doubtful
+2026-09-13,DraftKings,Tez Johnson 2+ TDs,2+ TD,6500,,5.00,L,0.00,injury-elevation-2plus,claude,duplicate of Fanatics ticket
+2026-09-14,DraftKings,Pat Bryant anytime (live),anytime TD,425,,5.00,L,0.00,other,user,
+2026-09-14,DraftKings,SGP Bryant + Worthy,sgp,2700,,5.00,L,0.00,other,user,
+2026-09-14,DraftKings,SGP Harvey + Nix,sgp,18000,,5.00,L,0.00,other,user,
+2026-09-14,DraftKings,SGP Nix + Dobbins + Harvey (no sweat),sgp,9000,,20.00,L,0.00,other,user,$20 no-sweat bonus bet returned (not cash)
+2026-09-14,DraftKings,J.K. Dobbins anytime,anytime TD,185,,10.00,L,0.00,other,user,not on card
+2026-09-14,DraftKings,Bo Nix 2+ TDs,2+ TD,4500,6750,10.00,L,0.00,qb-rush-matchup,claude,50% boost; top pick MNF wk1
+2026-09-14,DraftKings,Cyrus Allen first TD,first TD,4000,,5.00,L,0.00,other,user,
+2026-09-14,DraftKings,Lil'Jordan Humphrey 2+ TDs,2+ TD,18000,,5.00,V,5.00,other,user,cancelled by book
+2026-09-14,DraftKings,Walker + Dobbins 1+ TD (McAfee boost),boost special,400,600,10.00,L,0.00,other,user,
+2026-09-16,DraftKings,Jahmyr Gibbs 3+ TDs,3+ TD,550,825,7.00,L,0.00,lead-back-3plus,claude,TNF boost; sized to cap
+2026-09-17,DraftKings,SGP 5x 5+ receptions,sgp,2400,1100,5.00,L,0.00,other,user,early exit protected; held vs cash-out $7.45
+2026-09-17,DraftKings,Greg Dortch 2+ TDs (live),2+ TD,30000,,10.00,L,0.00,other,user,live
+2026-09-17,DraftKings,Keon Coleman 2+ TDs (live),2+ TD,9000,,20.00,L,0.00,other,user,$20 bonus bet (not cash)
+2026-09-17,DraftKings,DET Lions ML (live),moneyline,1400,,10.00,L,0.00,other,user,live
+2026-09-17,DraftKings,Quentin Johnston 2+ TDs,2+ TD,850,,4.00,L,0.00,injury-elevation-2plus,claude,McConkey out
+2026-09-21,DraftKings,Konata Mumpfield anytime,anytime TD,500,750,10.00,L,0.00,injury-elevation-anytime,claude,Nacua out; 50% boost
+2026-09-21,DraftKings,Cam Skattebo anytime,anytime TD,110,150,5.00,L,0.00,other,user,advised fade (LA elite vs RB)
+2026-09-21,DraftKings,SGP 10 picks NYG@LAR,sgp,1900,8450,20.00,L,0.00,other,user,10-leg
+2026-09-21,DraftKings,NY Giants ML (live),moneyline,1000,1300,10.00,L,0.00,other,user,live
+2026-09-24,DraftKings,SGP London + ATL,sgp,3000,4500,10.00,L,0.00,other,user,
+2026-09-24,DraftKings,Matthew Golden 2+ TDs (live),2+ TD,1600,,5.00,L,0.00,other,user,live
+2026-09-24,DraftKings,SGP Watson + Bijan + Golden anytime,sgp,1500,2250,5.00,W,117.50,other,user,50% parlay boost; all three scored
+2026-09-24,BetRivers,Josh Palmer anytime,anytime TD,650,,10.00,L,0.00,other,user,not on card
+2026-09-26,Fanatics,SGP Schultz 2+ TDs + 50+ rec yds (FanCash),sgp,1800,,6.00,L,0.00,other,user,FanCash; card had Schultz 2+ single
+2026-09-26,Fanatics,Kayshon Boutte anytime (FanCash),anytime TD,290,,8.00,L,0.00,injury-elevation-anytime,claude,FanCash; Collins out
+2026-09-26,Fanatics,Mike Gesicki 2+ TDs (FanCash),2+ TD,3500,,5.00,L,0.00,injury-elevation-2plus,claude,FanCash; scored once
+2026-09-26,Fanatics,Pat Freiermuth 2+ TDs (FanCash),2+ TD,3000,,4.00,L,0.00,matchup-te-2plus,claude,FanCash
+2026-09-24,Fanatics,Josh Palmer anytime (FanCash),anytime TD,390,,20.00,L,0.00,other,user,FanCash; duplicate of BetRivers
+2026-09-26,Fanatics,Pat Freiermuth anytime (FanCash),anytime TD,410,,8.00,L,0.00,matchup-te,claude,FanCash
+2026-09-26,Fanatics,Jauan Jennings anytime (FanCash),anytime TD,575,,7.00,L,0.00,role-td-specialist,claude,FanCash; 53% TD rate 2025
+2026-09-26,Fanatics,Jauan Jennings 2+ TDs (FanCash),2+ TD,5000,,4.00,L,0.00,role-td-specialist-2plus,claude,FanCash
+2026-09-26,Fanatics,Devontez Walker anytime (FanCash),anytime TD,475,,3.00,L,0.00,injury-elevation-anytime,claude,FanCash
+2026-09-26,Fanatics,Devontez Walker 2+ TDs (FanCash),2+ TD,5000,,5.00,L,0.00,injury-elevation-2plus,claude,FanCash
+2026-09-23,Fanatics,Nicholas Singleton 2+ TDs (FanCash),2+ TD,30000,,20.00,L,0.00,other,user,FanCash $20 promo-qualifying; not on card
+2026-09-26,Fanatics,Mike Gesicki anytime (FanCash),anytime TD,475,,10.00,W,57.50,injury-elevation-anytime,claude,FanCash; 25-yd TD
+2026-09-23,Fanatics,Julius Chestnut 2+ TDs (FanCash),2+ TD,25000,,20.00,L,0.00,other,user,FanCash; TEN RB3
+2026-09-26,Fanatics,Malachi Fields 2+ TDs (FanCash),2+ TD,3500,,6.00,L,0.00,injury-elevation-2plus,claude,FanCash
+2026-09-26,Fanatics,Theo Johnson anytime (FanCash),anytime TD,850,,5.00,L,0.00,injury-elevation-anytime,claude,FanCash
+2026-09-26,Fanatics,Malachi Fields anytime (FanCash),anytime TD,430,,10.00,L,0.00,injury-elevation-anytime,claude,FanCash
+2026-09-26,Fanatics,Isaiah Likely anytime (FanCash),anytime TD,325,,12.00,L,0.00,injury-elevation-anytime,claude,FanCash; NYG scored 0 TD
+2026-09-26,Fanatics,3-leg ATD parlay incl TEN@NYG (FanCash),parlay,14766,,20.00,L,0.00,other,user,FanCash; not on card

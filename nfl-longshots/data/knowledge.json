@@ -1,0 +1,16 @@
+{
+  "_readme": "Your editable football-knowledge overlay. Update weekly. Team keys are ESPN abbreviations (HOU, PHI, KC...). See METHODOLOGY.md for how each field affects scoring.",
+
+  "_example": {
+    "weakPassDefenses": ["CAR", "WSH"],
+    "weakRunDefenses": ["ARI"],
+    "strongDefenses": ["BAL", "SF"],
+    "goalLineBacks": { "PHI": "Saquon Barkley" }
+  },
+
+  "weakPassDefenses": [],
+  "weakRunDefenses": [],
+  "strongDefenses": [],
+  "goalLineBacks": {},
+  "fadeRookieTEs": true
+}
